@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Busca de Programas de Pós - Computação</title>
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fa;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background-color: #1e88e5;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    main {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .search-box {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .search-box input {
+      padding: 10px;
+      width: 60%;
+      max-width: 600px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    th,
+    td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+      font-size: 14px;
+    }
+    #cabeca {
+      background-color: #1e88e5;
+      color: white;
+      position: sticky;
+      top: 0;
+    }
+    th {
+      background-color: #1e88e5;
+      color: white;
+      position: sticky;
+      top: 0;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    a {
+      color: #1e88e5;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      background: #eee;
+      padding: 15px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>Ferramenta de Busca de Programas de Pós-Graduação em Computação</h1>
+  </header>
+
+  <main>
+    <div class="search-box">
+      <input type="text" id="pesquisa" placeholder="Pesquisar programas..." onkeyup="filtrarTabela()">
+    </div>
+
+    <table id="tabelaProgramas">
+      <tbody id="tabelaCorpo">
+        <!-- Linhas adicionadas via JavaScript -->
+      </tbody>
+    </table>
+  </main>
+
+  <footer>
+    &copy; 2025 - Ferramenta para Estudantes de Computação
+  </footer>
+
+  <script>
+
+    async function carregarTabela() {
+      const spreadsheetId = "1RQuPV-Z-D2GgdQHhyeCW-Xwhgt1VdmcrPrc_9mADgfM";
+      const url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:json`;
+
+      try {
+        const response = await fetch(url);
+        const text = await response.text();
+
+        // Remove o prefixo que o Google coloca
+        const json = JSON.parse(text.substring(47).slice(0, -2));
+
+        const tabela = document.getElementById('tabelaProgramas')
+        console.log(json.table.rows[0].c)
+
+        const headers = json.table.rows[0].c
+        const cabecalho = `
+            <thead id=cabeca>
+                <tr>
+                    <td>${headers[0].v}</td>
+                    <td>${headers[1].v}</td>
+                    <td>${headers[2].v}</td>
+                    <td>${headers[3].v}</td>
+                    <td>${headers[4].v}</td>
+                    <td>${headers[5].v}</td>
+                    <td>${headers[6].v}</td>
+                    <td>${headers[7].v}</td>
+                </tr>
+            </thead>
+                    `
+        tabela.innerHTML = ""
+        tabela.innerHTML += cabecalho
+        tabela.innerHTML +=
+        `
+        <tbody id="tabelaCorpo">
+        
+        </tbody>
+        `
+        const tabelaCorpo = document.getElementById('tabelaCorpo');
+        tabelaCorpo.innerHTML = ""; // Limpa a tabela
+        json.table.rows.shift()
+        json.table.rows.forEach(row => {
+          
+          const colunas = row.c.map(c => c ? c.v : ""); // pega os valores ou vazio
+          if (colunas.length >= 8) {
+            const novaLinha = `
+                    <tr>
+                        <td>${colunas[0]}</td>
+                        <td>${colunas[1]}</td>
+                        <td>${colunas[2]}</td>
+                        <td>${colunas[3]}</td>
+                        <td><a href="${colunas[4]}" target="_blank">URL</a></td>
+                        <td>${colunas[5]}</td>
+                        <td>${colunas[6]}</td>
+                        <td>${colunas[7]}</td>
+                    </tr>
+                `;
+            tabelaCorpo.innerHTML += novaLinha;
+          }
+        });
+
+      } catch (error) {
+        console.error("Erro ao buscar dados da planilha:", error);
+      }
+    }
+
+
+    function filtrarTabela() {
+      const input = document.getElementById('pesquisa');
+      const filtro = input.value.toLowerCase();
+      const linhas = document.querySelectorAll("#tabelaCorpo tr");
+
+      linhas.forEach(linha => {
+        const textoLinha = linha.textContent.toLowerCase();
+        if (textoLinha.includes(filtro)) {
+          linha.style.display = "";
+        } else {
+          linha.style.display = "none";
+        }
+      });
+    }
+
+    window.onload = carregarTabela;
+  </script>
+
+</body>
+
+</html>
