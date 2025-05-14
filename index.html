@@ -11,6 +11,7 @@
       margin: 0;
       font-family: Arial, sans-serif;
       background: #f5f7fa;
+      width: fit-content;
     }
 
     body {
@@ -58,12 +59,14 @@
       text-align: left;
       font-size: 14px;
     }
+
     #cabeca {
       background-color: #1e88e5;
       color: white;
       position: sticky;
       top: 0;
     }
+
     th {
       background-color: #1e88e5;
       color: white;
@@ -71,8 +74,12 @@
       top: 0;
     }
 
-    tr:hover {
+    tbody tr:hover {
       background-color: #f1f1f1;
+    }
+
+    #cabeca:hover {
+      background-color: #1565c0;
     }
 
     a {
@@ -128,27 +135,27 @@
         const json = JSON.parse(text.substring(47).slice(0, -2));
 
         const tabela = document.getElementById('tabelaProgramas')
-        console.log(json.table.rows[0].c)
+        console.log(json)
 
-        const headers = json.table.rows[0].c
+        const headers = json.table.cols
         const cabecalho = `
             <thead id=cabeca>
                 <tr>
-                    <td>${headers[0].v}</td>
-                    <td>${headers[1].v}</td>
-                    <td>${headers[2].v}</td>
-                    <td>${headers[3].v}</td>
-                    <td>${headers[4].v}</td>
-                    <td>${headers[5].v}</td>
-                    <td>${headers[6].v}</td>
-                    <td>${headers[7].v}</td>
+                    <td>${headers[0].label}</td>
+                    <td>${headers[1].label}</td>
+                    <td>${headers[2].label}</td>
+                    <td>${headers[3].label}</td>
+                    <td>${headers[4].label}</td>
+                    <td>${headers[5].label}</td>
+                    <td>${headers[6].label}</td>
+                    <td>${headers[7].label}</td>
                 </tr>
             </thead>
                     `
         tabela.innerHTML = ""
         tabela.innerHTML += cabecalho
         tabela.innerHTML +=
-        `
+          `
         <tbody id="tabelaCorpo">
         
         </tbody>
@@ -157,7 +164,7 @@
         tabelaCorpo.innerHTML = ""; // Limpa a tabela
         json.table.rows.shift()
         json.table.rows.forEach(row => {
-          
+
           const colunas = row.c.map(c => c ? c.v : ""); // pega os valores ou vazio
           if (colunas.length >= 8) {
             const novaLinha = `
@@ -166,8 +173,8 @@
                         <td>${colunas[1]}</td>
                         <td>${colunas[2]}</td>
                         <td>${colunas[3]}</td>
-                        <td><a href="${colunas[4]}" target="_blank">URL</a></td>
-                        <td>${colunas[5]}</td>
+                        <td>${colunas[4]}</td>
+                        <td><a href="${colunas[5]}" target="_blank">URL</a></td>
                         <td>${colunas[6]}</td>
                         <td>${colunas[7]}</td>
                     </tr>
