@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Busca de Programas de Pós - Computação</title>
   <style>
     html,
@@ -11,7 +12,7 @@
       margin: 0;
       font-family: Arial, sans-serif;
       background: #f5f7fa;
-      width: fit-content;
+      /*width: fit-content;*/
     }
 
     body {
@@ -38,7 +39,7 @@
 
     .search-box input {
       padding: 10px;
-      width: 60%;
+      width: 90%;
       max-width: 600px;
       border: 1px solid #ccc;
       border-radius: 5px;
@@ -52,12 +53,28 @@
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
 
+    .table-responsive {
+      overflow-x: auto;
+      width: 100%;
+      -webkit-overflow-scrolling: touch;
+    }
+
     th,
     td {
       padding: 10px;
       border-bottom: 1px solid #ddd;
       text-align: left;
-      font-size: 14px;
+      font-size: 16px;
+    }
+
+    @media screen and (max-width: 600px) {
+
+      th,
+      td {
+        padding: 8px;
+        font-size: 14px;
+        /* Still legible on small screens */
+      }
     }
 
     #cabeca {
@@ -109,12 +126,14 @@
     <div class="search-box">
       <input type="text" id="pesquisa" placeholder="Pesquisar programas..." onkeyup="filtrarTabela()">
     </div>
+    <div class="table-responsive">
 
-    <table id="tabelaProgramas">
-      <tbody id="tabelaCorpo">
-        <!-- Linhas adicionadas via JavaScript -->
-      </tbody>
-    </table>
+      <table id="tabelaProgramas">
+        <tbody id="tabelaCorpo">
+          <!-- Linhas adicionadas via JavaScript -->
+        </tbody>
+      </table>
+    </div>
   </main>
 
   <footer>
